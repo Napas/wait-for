@@ -45,7 +45,7 @@ func (w *grpcWaiter) Wait(ctx context.Context, cfg grpcWaiterCfg) (err error) {
 }
 
 func (w *grpcWaiter) isServing(ctx context.Context, client grpc_health_v1.HealthClient, service string) bool {
-	w.logger.Infof("Checking is %s is up", service)
+	w.logger.Infof("Checking if %s is up", service)
 
 	resp, err := client.Check(ctx, &grpc_health_v1.HealthCheckRequest{
 		Service: service,
