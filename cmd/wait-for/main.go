@@ -3,8 +3,7 @@ package main
 import (
 	"net/http"
 	"os"
-
-	appHttp "wait_for/http"
+	appHtpp "wait_for/http"
 
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
@@ -35,7 +34,7 @@ func main() {
 			return nil
 		},
 		Commands: []*cli.Command{
-			appHttp.NewCmd(http.DefaultClient, logger),
+			appHtpp.NewCmd(http.DefaultClient, logger),
 		},
 	}
 
