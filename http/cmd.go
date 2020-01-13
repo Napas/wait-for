@@ -32,6 +32,7 @@ func NewCmd(httpClient HttpClient, logger logrus.FieldLogger) *cli.Command {
 		Action: func(ctx *cli.Context) error {
 			httpWaiter := newHttpWaiter(
 				httpClient,
+				ctx.Bool("verbose"),
 				logger,
 			)
 			cfg := httpWaiterCfg{

@@ -15,17 +15,19 @@ type HttpClient interface {
 }
 
 type HttpWaiter struct {
-	cfg        httpWaiterCfg
 	httpClient HttpClient
+	debug      bool
 	logger     logrus.FieldLogger
 }
 
 func newHttpWaiter(
 	httpClient HttpClient,
+	debug bool,
 	logger logrus.FieldLogger,
 ) *HttpWaiter {
 	return &HttpWaiter{
 		httpClient: httpClient,
+		debug:      debug,
 		logger:     logger,
 	}
 }
@@ -37,7 +39,13 @@ func (w *HttpWaiter) Wait(cfg httpWaiterCfg) error {
 		return err
 	}
 
-	for w.doRequest(reqUrl, cfg.ExpectedHttpCode, cfg.Method) != nil {
+	for err := w.doRequest(reqUrl, cfg.ExpectedHttpCode, cfg.Method); err != nil; {
+		if w.debug {
+			w.logger.Error(err)
+		}
+
+		w.logger.Info("No luck, waiting ...")
+
 		time.Sleep(time.Second)
 	}
 
@@ -45,7 +53,7 @@ func (w *HttpWaiter) Wait(cfg httpWaiterCfg) error {
 }
 
 func (w *HttpWaiter) doRequest(reqUrl *url.URL, expectedStatusCode int, method string) error {
-	w.logger.Infof("Making request to %s %s", w.cfg.GetMethod(), w.cfg.Url)
+	w.logger.Infof("Making request %s %s", method, reqUrl.String())
 
 	resp, err := w.httpClient.Do(&http.Request{
 		Method: method,

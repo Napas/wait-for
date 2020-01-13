@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 
 	appHtpp "github.com/Napas/wait-for/http"
 
@@ -38,6 +41,15 @@ func main() {
 			appHtpp.NewCmd(http.DefaultClient, logger),
 		},
 	}
+
+	c := make(chan os.Signal, 2)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+
+	go func() {
+		<-c
+		fmt.Println("\r- Ctrl+C pressed in Terminal")
+		os.Exit(0)
+	}()
 
 	if err := app.Run(os.Args); err != nil {
 		logger.Fatal(err)
