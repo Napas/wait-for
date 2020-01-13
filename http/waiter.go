@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"io/ioutil"
 	"net/http"
 	url "net/url"
@@ -33,14 +34,14 @@ func newHttpWaiter(
 	}
 }
 
-func (w *HttpWaiter) Wait(cfg httpWaiterCfg) error {
+func (w *HttpWaiter) Wait(ctx context.Context, cfg httpWaiterCfg) error {
 	reqUrl, err := url.Parse(cfg.Url)
 
 	if err != nil {
 		return err
 	}
 
-	for err := w.doRequest(reqUrl, cfg.ExpectedHttpCode, cfg.Method); err != nil; {
+	for err := w.doRequest(ctx, reqUrl, cfg.ExpectedHttpCode, cfg.Method); err != nil; {
 		w.logger.Debug(err)
 		w.logger.Info("No luck, waiting ...")
 
@@ -50,13 +51,20 @@ func (w *HttpWaiter) Wait(cfg httpWaiterCfg) error {
 	return nil
 }
 
-func (w *HttpWaiter) doRequest(reqUrl *url.URL, expectedStatusCode int, method string) error {
+func (w *HttpWaiter) doRequest(
+	ctx context.Context,
+	reqUrl *url.URL,
+	expectedStatusCode int,
+	method string,
+) error {
 	w.logger.Infof("Making request %s %s", method, reqUrl.String())
 
-	resp, err := w.httpClient.Do(&http.Request{
+	req := &http.Request{
 		Method: method,
 		URL:    reqUrl,
-	})
+	}
+	req = req.WithContext(ctx)
+	resp, err := w.httpClient.Do(req)
 
 	if err != nil {
 		return err

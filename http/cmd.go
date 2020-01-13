@@ -41,7 +41,7 @@ func NewCmd(httpClient HttpClient, logger logrus.FieldLogger) *cli.Command {
 				ExpectedHttpCode: ctx.Int("expected-status-code"),
 			}
 
-			if err := httpWaiter.Wait(cfg); err != nil {
+			if err := httpWaiter.Wait(ctx.Context, cfg); err != nil {
 				return err
 			}
 
