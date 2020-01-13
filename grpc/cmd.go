@@ -25,7 +25,7 @@ func NewCmd(logger logrus.FieldLogger) *cli.Command {
 		},
 		Action: func(ctx *cli.Context) error {
 			waiter := newGrpcWaiter(logger)
-			err := waiter.Wait(ctx, grpcWaiterCfg{
+			err := waiter.Wait(ctx.Context, grpcWaiterCfg{
 				Url:     ctx.String("url"),
 				Service: ctx.String("service"),
 			})
