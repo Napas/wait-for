@@ -1,7 +1,7 @@
 package http
 
 import (
-	"wait_for/runner"
+	"github.com/Napas/wait-for/runner"
 
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"

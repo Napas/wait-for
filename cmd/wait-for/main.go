@@ -3,7 +3,8 @@ package main
 import (
 	"net/http"
 	"os"
-	appHtpp "wait_for/http"
+
+	appHtpp "github.com/Napas/wait-for/http"
 
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"

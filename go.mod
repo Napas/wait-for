@@ -1,4 +1,4 @@
-module wait_for
+module github.com/Napas/wait-for
 
 go 1.13
 
