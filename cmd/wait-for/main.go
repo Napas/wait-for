@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/Napas/wait-for/grpc"
+
 	appHtpp "github.com/Napas/wait-for/http"
 
 	"github.com/sirupsen/logrus"
@@ -39,6 +41,7 @@ func main() {
 		},
 		Commands: []*cli.Command{
 			appHtpp.NewCmd(http.DefaultClient, logger),
+			grpc.NewCmd(logger),
 		},
 	}
 

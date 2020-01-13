@@ -1,6 +1,7 @@
 package http
 
 import (
+	"io/ioutil"
 	"net/http"
 	url "net/url"
 	"time"
@@ -40,10 +41,7 @@ func (w *HttpWaiter) Wait(cfg httpWaiterCfg) error {
 	}
 
 	for err := w.doRequest(reqUrl, cfg.ExpectedHttpCode, cfg.Method); err != nil; {
-		if w.debug {
-			w.logger.Error(err)
-		}
-
+		w.logger.Debug(err)
 		w.logger.Info("No luck, waiting ...")
 
 		time.Sleep(time.Second)
@@ -67,6 +65,9 @@ func (w *HttpWaiter) doRequest(reqUrl *url.URL, expectedStatusCode int, method s
 	if resp.StatusCode == expectedStatusCode {
 		return nil
 	}
+
+	respBody, _ := ioutil.ReadAll(resp.Body)
+	w.logger.Debug(string(respBody))
 
 	return errors.New("unexpected status code")
 }

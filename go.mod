@@ -9,4 +9,5 @@ require (
 	github.com/sirupsen/logrus v1.4.2
 	github.com/urfave/cli/v2 v2.0.0
 	golang.org/x/sys v0.0.0-20200107162124-548cf772de50 // indirect
+	google.golang.org/grpc v1.26.0
 )
