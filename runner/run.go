@@ -3,12 +3,14 @@ package runner
 import (
 	"bufio"
 	"os/exec"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
 
 func Run(ctx *cli.Context, logger logrus.FieldLogger) error {
+	logger.Infof("Running %s %s", ctx.Args().First(), strings.Join(ctx.Args().Tail(), " "))
 	cmd := exec.CommandContext(ctx.Context, ctx.Args().First(), ctx.Args().Tail()...)
 	reader, err := cmd.StdoutPipe()
 
